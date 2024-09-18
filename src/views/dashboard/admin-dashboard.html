@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard del Administrador</title>
+  <!-- CSS Styles -->
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+  <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
+  <!-- Updated TinyMCE with API Key -->
+  <script src="https://cdn.tiny.cloud/1/b8l3wz4rje7t1jm9cp889gslmupn2qkyccvu3ubu18yjl40l/tinymce/5/tinymce.min.js"></script>
+  <style>
+    .tab-bar {
+      background: rgb(189, 189, 189);
+      border-radius: 4px;
+      padding: 0.5rem 0;
+    }
+
+    .tab-link {
+      position: relative;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      color: #000000;
+      text-decoration: none;
+      transition: color 0.3s ease, border 0.3s ease;
+      border-radius: 4px;
+    }
+    
+    .tab-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, red, purple, blue);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tab-link:hover::before,
+    .tab-link.tab-active::before {
+      opacity: 1;
+    }
+
+    .tab-active {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Menú de navegación en forma de pestañas -->
+  <div class="container mx-auto mt-10">
+    <div class="bg-white rounded-lg shadow">
+      <!-- Barra de pestañas -->
+      <div class="border-b border-gray-200">
+        <ul class="flex">
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#gestionUsuarios">Gestión de Usuarios</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#rolesPermisos">Roles y Permisos</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#analisis">Análisis y Reportes</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#gestionIdeas">Gestión de Ideas</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#evaluacionIdeas">Evaluación de Ideas</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contenido de las pestañas -->
+      <div class="p-4">
+        <!-- Pestaña Análisis y Reportes -->
+        <div id="analisis" class="tab-content hidden custom-height">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Análisis y Reportes</h2>
+          <p>Accede a informes y análisis detallados del uso y rendimiento del sistema.</p>
+
+          <!-- Sección de tarjetas con métricas clave -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 shadow rounded-lg">
+              <h3 class="text-lg font-semibold">Total de accesos</h3>
+              <p class="text-3xl text-blue-600">1,245</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded-lg">
+              <h3 class="text-lg font-semibold">Errores reportados</h3>
+              <p class="text-3xl text-red-600">24</p>
+            </div>
+            <div class="bg-white p-4 shadow rounded-lg">
+              <h3 class="text-lg font-semibold">Promedio de respuesta</h3>
+              <p class="text-3xl text-green-600">320 ms</p>
+            </div>
+          </div>
+
+          <!-- Filtros para los reportes -->
+          <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <h4 class="text-lg font-semibold mb-2">Filtros de Reportes</h4>
+            <div class="flex flex-wrap">
+              <div class="mr-4 mb-4">
+                <label for="fecha-inicio" class="block font-medium text-gray-700">Fecha inicio</label>
+                <input type="date" id="fecha-inicio" class="border rounded px-2 py-1">
+              </div>
+              <div class="mr-4 mb-4">
+                <label for="fecha-fin" class="block font-medium text-gray-700">Fecha fin</label>
+                <input type="date" id="fecha-fin" class="border rounded px-2 py-1">
+              </div>
+              <div class="mr-4 mb-4">
+                <label for="roles" class="block font-medium text-gray-700">Roles</label>
+                <select id="roles" class="border rounded px-2 py-1">
+                  <option value="">Todos los Roles</option>
+                  <option value="admin">Administrador</option>
+                  <option value="analista">Analista de Datos</option>
+                  <option value="usuarios">Usuarios</option>
+                </select>
+              </div>
+            </div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Aplicar Filtros</button>
+          </div>
+
+          <!-- Tabla de Reportes -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Detalles de uso del sistema</h5>
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Acción</th>
+                    <th>Duración de la sesión</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Admin Uno</td>
+                    <td>2024-09-01</td>
+                    <td>Acceso al sistema</td>
+                    <td>3h 20m</td>
+                    <td>Exitoso</td>
+                  </tr>
+                  <tr>
+                    <td>Analista Dos</td>
+                    <td>2024-09-02</td>
+                    <td>Generación de Reporte</td>
+                    <td>1h 15m</td>
+                    <td>Exitoso</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Botón de descarga de reportes -->
+          <div class="mt-4">
+            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+              <i class="fas fa-download"></i> Descargar Informe PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Pestaña Gestión de Usuarios -->
+        <div id="gestionUsuarios" class="tab-content">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Usuarios</h2>
+          <p>Aquí puedes gestionar los usuarios del sistema, agregar nuevos usuarios, editar detalles o eliminar usuarios existentes.</p>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Lista de Usuarios</h5>
+              <table class="table datatable" id="usuariosTable">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña Roles y Permisos -->
+        <div id="rolesPermisos" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Roles y Permisos</h2>
+          <p>Gestiona los roles y permisos de los usuarios del sistema aquí.</p>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Asignar Roles</h5>
+              <table class="table datatable" id="rolesTable">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Rol Asignado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña Gestión de Ideas -->
+        <div id="gestionIdeas" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Ideas</h2>
+          <p>Administra las ideas de productos agrícolas. Realiza operaciones CRUD sobre ellas.</p>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Lista de Ideas</h5>
+              <table class="table datatable" id="ideasTable">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Alcance</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Evaluación</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                    <th>Conclusiones</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña Evaluación de Ideas -->
+        <div id="evaluacionIdeas" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Evaluación de Ideas</h2>
+          <p>Evalúa y califica las ideas propuestas. Modifica los criterios de evaluación y supervisa el proceso de análisis de viabilidad.</p>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Evaluaciones de Ideas</h5>
+              <table class="table datatable" id="evaluacionesTable">
+                <thead>
+                  <tr>
+                    <th>Idea ID</th>
+                    <th>Componentes</th>
+                    <th>Etapas</th>
+                    <th>Mercado</th>
+                    <th>Aceptación</th>
+                    <th>Datos</th>
+                    <th>Viabilidad (%)</th>
+                    <th>Creado En</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script para manejar las pestañas y resaltar la pestaña activa -->
+  <script>
+    document.querySelectorAll('.tab-link').forEach((tabLink) => {
+      tabLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href').substring(1);
+
+        // Ocultar todas las secciones de contenido
+        document.querySelectorAll('.tab-content').forEach((tabContent) => {
+          tabContent.classList.add('hidden');
+        });
+
+        // Mostrar la sección de contenido correspondiente
+        document.getElementById(targetId).classList.remove('hidden');
+
+        // Quitar la clase activa de todas las pestañas
+        document.querySelectorAll('.tab-link').forEach((link) => {
+          link.classList.remove('tab-active', 'border-b-2', 'border-blue-500');
+        });
+
+        // Agregar la clase activa a la pestaña seleccionada
+        event.target.classList.add('tab-active', 'border-b-2', 'border-blue-500');
+
+        // Cargar datos para la pestaña seleccionada
+        cargarDatos(targetId);
+      });
+    });
+
+    // Inicializar la primera pestaña como activa al cargar la página
+    window.onload = function() {
+      // Ocultar todas las pestañas
+      document.querySelectorAll('.tab-content').forEach((tabContent) => {
+        tabContent.classList.add('hidden');
+      });
+
+      // Mostrar la primera pestaña (Gestión de Usuarios)
+      document.getElementById('gestionUsuarios').classList.remove('hidden');
+      document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
+      
+      // Cargar datos al iniciar
+      cargarDatos('gestionUsuarios');
+      cargarDatos('gestionIdeas');
+      cargarDatos('evaluacionIdeas');
+      cargarDatos('rolesPermisos');
+    };
+  </script>
+
+  <!-- Vendor JS Files -->
+  <script src="/dashboard/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/dashboard/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+
+  <!-- Inicializar DataTable -->
+  <script>
+    function inicializarDataTable(selector) {
+        // Verifica si el DataTable ya está inicializado para evitar errores
+        if (!document.querySelector(selector).classList.contains('datatable-initialized')) {
+            new simpleDatatables.DataTable(selector, {
+                searchable: true,
+                fixedHeight: true,
+                perPage: 10
+            });
+            document.querySelector(selector).classList.add('datatable-initialized');
+        }
+    }
+
+    async function cargarDatos(tipo) {
+        try {
+            // Ajustar el nombre de los endpoints
+            const endpoint = tipo === 'gestionUsuarios' ? 'usuarios' :
+                             tipo === 'gestionIdeas' ? 'ideas' : 
+                             tipo === 'evaluacionIdeas' ? 'evaluaciones' :
+                             tipo === 'rolesPermisos' ? 'roles' : 
+                             tipo === 'analisis' ? 'analisis' : '';
+
+            if (!endpoint) {
+                console.error('Tipo de datos no válido:', tipo);
+                return;
+            }
+
+            const response = await fetch(`/api/${endpoint}`);
+            if (!response.ok) {
+                throw new Error(`Error HTTP! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (tipo === 'gestionUsuarios') {
+                llenarTablaUsuarios(data);
+                inicializarDataTable("#usuariosTable");
+            } else if (tipo === 'gestionIdeas') {
+                llenarTablaIdeas(data);
+                inicializarDataTable("#ideasTable");
+            } else if (tipo === 'evaluacionIdeas') {
+                llenarTablaEvaluaciones(data);
+                inicializarDataTable("#evaluacionesTable");
+            } else if (tipo === 'rolesPermisos') {
+                llenarTablaRoles(data);
+                inicializarDataTable("#rolesTable");
+            }
+        } catch (error) {
+            console.error('Error al obtener datos:', error);
+        }
+    }
+
+    function llenarTablaUsuarios(data) {
+        const tableBody = document.querySelector('#usuariosTable tbody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+        data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.name || 'No definido'}</td>
+                <td>${user.email || 'No definido'}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Editar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function llenarTablaIdeas(data) {
+        const tableBody = document.querySelector('#ideasTable tbody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+        data.forEach(idea => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${idea.nombre || 'No definido'}</td>
+                <td>${idea.alcance || 'No definido'}</td>
+                <td>${idea.fecha_creacion || 'No definido'}</td>
+                <td>${idea.fecha_evaluacion || 'N/A'}</td>
+                <td>${idea.usuario_email || 'No definido'}</td>
+                <td>${idea.estado || 'No definido'}</td>
+                <td>${idea.conclusiones || 'N/A'}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Editar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function llenarTablaEvaluaciones(data) {
+        const tableBody = document.querySelector('#evaluacionesTable tbody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+        data.forEach(evaluacion => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${evaluacion.idea_id || 'No definido'}</td>
+                <td>${evaluacion.componentes || 'No definido'}</td>
+                <td>${evaluacion.etapas || 'No definido'}</td>
+                <td>${evaluacion.mercado || 'No definido'}</td>
+                <td>${evaluacion.aceptacion || 'No definido'}</td>
+                <td>${evaluacion.datos || 'No definido'}</td>
+                <td>${evaluacion.viabilidad_porcentaje || 'No definido'}</td>
+                <td>${evaluacion.creadoEn || 'No definido'}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Modificar Criterios</button>
+                    <button class="btn btn-secondary btn-sm">Supervisar</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function llenarTablaRoles(data) {
+        const tableBody = document.querySelector('#rolesTable tbody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+        data.forEach(role => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${role.user_email || 'No definido'}</td>
+                <td>${role.name || 'No definido'}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Editar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+  </script>
+
+  <script src="/dashboard/NiceAdmin/assets/js/main.js"></script>
+
+</body>
+</html>

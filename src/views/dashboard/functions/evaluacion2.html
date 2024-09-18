@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Simplificada de Viabilidad del Producto Agrícola</title>
+    <!-- Tailwind CSS Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="block mx-auto my-12 p-8 bg-white w-2/3 border border-gray-200 rounded-lg shadow-lg text-gray-800">
+        <h1 class="text-3xl font-bold text-center text-green-700">Evaluación Simplificada de Viabilidad</h1>
+        <form id="evaluation-form-simplified" class="mt-4">
+            <!-- Nombre y Descripción del Producto -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-green-600">Datos del Producto</h2>
+                <label for="productName" class="block text-lg font-medium text-gray-700">Nombre de la Idea</label>
+                <input type="text" id="productName" name="productName" placeholder="Nombre de la Idea" class="border border-gray-300 w-full text-lg placeholder-gray-500 p-2 my-2 bg-gray-100 focus:bg-white focus:border-green-500" required>
+                
+                <label for="productDescription" class="block text-lg font-medium text-gray-700">Descripción Detallada</label>
+                <textarea id="productDescription" name="productDescription" placeholder="Descripción Detallada" class="border border-gray-300 w-full text-lg placeholder-gray-500 p-2 my-2 bg-gray-100 focus:bg-white focus:border-green-500" required></textarea>
+            </div>
+
+            <button type="submit" class="rounded-md bg-green-500 w-full text-lg text-white font-semibold p-2 my-3 hover:bg-green-600 focus:bg-green-700 focus:outline-none">
+                Enviar Evaluación
+            </button>
+        </form>
+
+        <!-- Mensaje de carga -->
+        <div id="loading-message" class="hidden text-center my-4 text-green-700">
+            <p>Procesando, por favor espera...</p>
+        </div>
+
+        <!-- Elemento para mostrar la respuesta de ChatGPT -->
+        <div id="response-container" class="mt-4 p-4 bg-green-100 border border-green-200 rounded-md hidden">
+            <h3 class="text-lg font-semibold text-green-800">Respuesta de GPT:</h3>
+            <div id="gpt-response" class="text-gray-700"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('evaluation-form-simplified').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+        
+            // Limpiar las respuestas anteriores
+            document.getElementById('gpt-response').innerHTML = '';
+    
+            // Muestra el mensaje de carga
+            document.getElementById('loading-message').classList.remove('hidden');
+        
+            try {
+                // Parte 1: Solicitar componentes
+                const componentResponse = await fetch('/dashboard/functions/evaluacion2/componentes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const componentResult = await componentResponse.json();
+                if (componentResponse.ok && componentResult.response) {
+                    displaySection('Componentes', componentResult.response);
+                    data.componentResponse = componentResult.response; // Guardar para la siguiente solicitud
+                    data.ideaId = componentResult.ideaId; // Guardar el ID de la idea
+                } else {
+                    throw new Error('Error en la respuesta de componentes: ' + (componentResult.error || 'Desconocido'));
+                }
+    
+                // Parte 2: Solicitar etapas usando la respuesta anterior
+                const stagesResponse = await fetch('/dashboard/functions/evaluacion2/etapas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const stagesResult = await stagesResponse.json();
+                if (stagesResponse.ok && stagesResult.response) {
+                    displaySection('Etapa para desarrollar e implementar', stagesResult.response);
+                    data.stagesResponse = stagesResult.response; // Guardar para la siguiente solicitud
+                } else {
+                    throw new Error('Error en la respuesta de etapas: ' + (stagesResult.error || 'Desconocido'));
+                }
+    
+                // Parte 3: Solicitar implementación en el mercado
+                const marketResponse = await fetch('/dashboard/functions/evaluacion2/mercado', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const marketResult = await marketResponse.json();
+                if (marketResponse.ok && marketResult.response) {
+                    displaySection('Implementación en el mercado', marketResult.response);
+                    data.marketResponse = marketResult.response; // Guardar para la siguiente solicitud
+                } else {
+                    throw new Error('Error en la respuesta de mercado: ' + (marketResult.error || 'Desconocido'));
+                }
+    
+                // Parte 4: Solicitar aceptación del mercado
+                const acceptanceResponse = await fetch('/dashboard/functions/evaluacion2/aceptacion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const acceptanceResult = await acceptanceResponse.json();
+                if (acceptanceResponse.ok && acceptanceResult.response) {
+                    displaySection('Aceptación del mercado', acceptanceResult.response);
+                    data.acceptanceResponse = acceptanceResult.response;
+                } else {
+                    throw new Error('Error en la respuesta de aceptación: ' + (acceptanceResult.error || 'Desconocido'));
+                }
+    
+                // Parte 5: Solicitar costos, tiempo y cantidad de personas
+                const datesResponse = await fetch('/dashboard/functions/evaluacion2/costos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const datesResult = await datesResponse.json();
+                if (datesResponse.ok && datesResult.response) {
+                    displaySection('Costos, Tiempo y Cantidad de Personas', datesResult.response);
+                    data.datesResponse = datesResult.response;
+                } else {
+                    throw new Error('Error en la respuesta de costos: ' + (datesResult.error || 'Desconocido'));
+                }
+    
+                // Parte 6: Solicitar viabilidad en porcentaje
+                const percentageResponse = await fetch('/dashboard/functions/evaluacion2/viabilidad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const percentageResult = await percentageResponse.json();
+                if (percentageResponse.ok && percentageResult.response) {
+                    displaySection('Viabilidad en Porcentaje', percentageResult.response);
+                    data.percentageResponse = percentageResult.response; // Guardar la última respuesta
+                } else {
+                    throw new Error('Error en la respuesta de viabilidad: ' + (percentageResult.error || 'Desconocido'));
+                }
+    
+                // Ahora enviar todos los datos al servidor para guardar en la base de datos
+                const saveResponse = await fetch('/dashboard/functions/evaluacion2/guardar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const saveResult = await saveResponse.json();
+    
+                if (!saveResponse.ok) {
+                    throw new Error('Error al guardar la evaluación: ' + (saveResult.error || 'Desconocido'));
+                }
+    
+                alert('Evaluación guardada exitosamente.');
+    
+            } catch (error) {
+                console.error('Error al enviar la evaluación:', error);
+                alert('Hubo un error al enviar la evaluación: ' + error.message);
+            } finally {
+                // Oculta el mensaje de carga al finalizar todas las peticiones o si ocurre un error
+                document.getElementById('loading-message').classList.add('hidden');
+            }
+        });
+    
+        // Función para mostrar las respuestas de cada parte
+        function displaySection(title, content) {
+            const responseContainer = document.getElementById('response-container');
+            const gptResponse = document.getElementById('gpt-response');
+            
+            // Formatear y agregar el nuevo contenido
+            let formattedResponse = `<h4 class="text-xl font-bold mt-4">${title}</h4>`;
+            formattedResponse += `<p>${content.replace(/\n/g, '<br>')}</p>`;
+            
+            gptResponse.innerHTML += formattedResponse;
+            responseContainer.classList.remove('hidden');
+        }
+    </script>    
+    
+</body>
+</html>

@@ -1,0 +1,159 @@
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+:root {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background: #f6f9ff;
+  color: #444444;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em; /* Reduce el tamaño de la fuente global */
+}
+
+a {
+  color: #4154f1;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #717ff5;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Nunito", sans-serif;
+  margin-bottom: 0.5em; /* Reduce el espacio inferior de los encabezados */
+}
+
+/* Reduce el tamaño de las fuentes de los encabezados */
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.6em;
+}
+
+h3 {
+  font-size: 1.4em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+h5,
+h6 {
+  font-size: 1em;
+}
+
+/*--------------------------------------------------------------
+# Main
+--------------------------------------------------------------*/
+#main {
+  margin-top: 50px; /* Reduce el margen superior */
+  padding: 15px 20px; /* Reduce el padding */
+  transition: all 0.3s;
+  flex: 1;
+  margin-bottom: 50px; /* Reduce el margen inferior */
+}
+
+@media (max-width: 1199px) {
+  #main {
+    padding: 15px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Custom adjustments for tab content
+--------------------------------------------------------------*/
+.tab-content {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 50px; /* Reduce el margen inferior */
+}
+
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
+.footer {
+  padding: 30px 0; /* Reduce el padding del footer */
+  background-color: #ffffff;
+  color: #2c2c2c;
+  font-size: 13px; /* Reduce el tamaño de fuente */
+  margin-top: 50px; /* Reduce el margen superior */
+}
+
+.footer .widget-title {
+  font-size: 16px; /* Reduce el tamaño del título */
+  font-weight: bold;
+  margin-bottom: 15px; /* Reduce el espacio inferior */
+  color: #2c2c2c;
+}
+
+.footer address {
+  font-style: normal;
+  line-height: 1.6; /* Reduce el line-height */
+}
+
+.footer .social-list a {
+  color: #2c2c2c;
+  margin: 0 8px; /* Reduce el espacio entre íconos sociales */
+  font-size: 16px; /* Reduce el tamaño del ícono */
+  transition: color 0.3s ease;
+}
+
+.footer .social-list a:hover {
+  color: #f1c40f;
+}
+
+.footer .copyright {
+  margin-bottom: 0;
+}
+
+.footer .credits a {
+  color: #2c2c2c;
+  text-decoration: underline;
+}
+
+.footer .credits a:hover {
+  color: #f1c40f;
+  text-decoration: none;
+}
+
+/* Asegura que el contenido siempre ocupe al menos el espacio de la pantalla */
+.content-container {
+  padding-bottom: 60px; /* Reduce el padding inferior */
+  flex: 1;
+  min-height: calc(100vh - 100px); /* Ajusta la altura para tener un espacio más compacto */
+}
+
+/*--------------------------------------------------------------
+# Custom table adjustments
+--------------------------------------------------------------*/
+.table {
+  width: 100%;
+  table-layout: auto;
+  overflow-x: auto;
+}
+
+.table td, .table th {
+  white-space: nowrap;
+  padding: 6px 8px; /* Reduce el padding de las celdas */
+  font-size: 0.85em; /* Reduce el tamaño de fuente en las tablas */
+}
+
+.datatable {
+  width: 100%;
+  overflow-x: auto;
+}

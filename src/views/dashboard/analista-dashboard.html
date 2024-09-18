@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard del Analista de Datos</title>
+  <!-- CSS Styles -->
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+  <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
+  <style>
+    .tab-bar {
+      background: rgb(189, 189, 189);
+      border-radius: 4px;
+      padding: 0.5rem 0;
+    }
+
+    .tab-link {
+      position: relative;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      color: #000000;
+      text-decoration: none;
+      transition: color 0.3s ease, border 0.3s ease;
+      border-radius: 4px;
+    }
+    
+    .tab-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, red, purple, blue);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tab-link:hover::before,
+    .tab-link.tab-active::before {
+      opacity: 1;
+    }
+
+    .tab-active {
+      color: #3b82f6; /* Color del texto de la pestaña activa */
+    }
+
+    /* Estilo del botón */
+    .btn-evaluacion {
+      display: inline-block;
+      background-color: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Menú de navegación en forma de pestañas -->
+  <div class="container mx-auto mt-10">
+    <div class="bg-white rounded-lg shadow">
+      <!-- Barra de pestañas -->
+      <div class="border-b border-gray-200">
+        <ul class="flex">
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#analisisReportes">Análisis y Reportes</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#gestionIdeas">Gestión de Ideas</a>
+          </li>
+          <li class="mr-1">
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#evaluacionIdeas">Evaluación de Ideas</a>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Contenido de las pestañas -->
+      <div class="p-4">
+        <!-- Pestaña Análisis y Reportes -->
+        <div id="analisisReportes" class="tab-content">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Análisis y Reportes</h2>
+          <p>Genera reportes detallados de las ideas que has creado. Selecciona los criterios que desees incluir en el reporte.</p>
+          
+          <!-- Filtros y criterios de reportes -->
+          <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <h4 class="text-lg font-semibold mb-2">Criterios de Reportes</h4>
+            <div class="flex flex-wrap">
+              <div class="mr-4 mb-4">
+                <label for="fecha-inicio" class="block font-medium text-gray-700">Fecha inicio</label>
+                <input type="date" id="fecha-inicio" class="border rounded px-2 py-1">
+              </div>
+              <div class="mr-4 mb-4">
+                <label for="fecha-fin" class="block font-medium text-gray-700">Fecha fin</label>
+                <input type="date" id="fecha-fin" class="border rounded px-2 py-1">
+              </div>
+              <div class="mr-4 mb-4">
+                <label for="criterios" class="block font-medium text-gray-700">Criterios</label>
+                <select id="criterios" class="border rounded px-2 py-1">
+                  <option value="todos">Todos</option>
+                  <option value="componentes">Componentes</option>
+                  <option value="etapas">Etapas</option>
+                  <option value="mercado">Análisis de Mercado</option>
+                  <option value="viabilidad">Viabilidad</option>
+                  <option value="costos">Costos</option>
+                </select>
+              </div>
+            </div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Generar Reporte</button>
+          </div>
+
+          <!-- Tabla de Reportes -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Reportes Generados</h5>
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>Nombre del Reporte</th>
+                    <th>Fecha de Generación</th>
+                    <th>Criterios Incluidos</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los reportes listados aquí deben ser filtrados para que solo aparezcan los que el analista ha generado -->
+                  <tr>
+                    <td>Reporte Análisis de Tomate</td>
+                    <td>2024-09-15</td>
+                    <td>Componentes, Etapas, Mercado</td>
+                    <td>
+                      <button class="btn btn-primary btn-sm">Ver</button>
+                      <button class="btn btn-secondary btn-sm">Descargar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña Gestión de Ideas -->
+        <div id="gestionIdeas" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Ideas de Productos Agrícolas</h2>
+          <p>Gestiona tus propias ideas de productos agrícolas. Puedes editarlas o eliminarlas.</p>
+
+          <!-- Tabla de Ideas de Productos Agrícolas -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Lista de Ideas</h5>
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>Nombre de la Idea</th>
+                    <th>Alcance</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Evaluación</th>
+                    <th>Estado</th>
+                    <th>Conclusiones</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Las ideas listadas aquí deben ser filtradas para que solo aparezcan las que el analista ha creado -->
+                  <tr>
+                    <td>Tomate Orgánico</td>
+                    <td>Alcance de la idea</td>
+                    <td>2024-09-01</td>
+                    <td>2024-09-10</td>
+                    <td>En evaluación</td>
+                    <td>Conclusión de la idea</td>
+                    <td>
+                      <button class="btn btn-primary btn-sm">Editar</button>
+                      <button class="btn btn-danger btn-sm">Eliminar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Botón para redirigir a la evaluación de ideas -->
+          <a href="/dashboard/functions/evaluacion2" class="btn-evaluacion">Ir a Evaluación de Ideas</a>
+        </div>
+
+        <!-- Pestaña Evaluación de Ideas -->
+        <div id="evaluacionIdeas" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Evaluación de Ideas</h2>
+          <p>Evalúa y califica las ideas propuestas. Modifica los criterios de evaluación y supervisa el proceso de análisis de viabilidad de tus propias ideas.</p>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Evaluaciones de Ideas</h5>
+              <table class="table datatable" id="evaluacionesTable">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Componentes</th>
+                    <th>Etapas</th>
+                    <th>Mercado</th>
+                    <th>Aceptación</th>
+                    <th>Datos</th>
+                    <th>Viabilidad (%)</th>
+                    <th>Fecha de Creación</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Las evaluaciones listadas aquí deben ser filtradas para que solo aparezcan las que el analista ha realizado -->
+                  <tr>
+                    <td>Idea 1</td>
+                    <td>Componente 1, Componente 2</td>
+                    <td>Etapa 1, Etapa 2</td>
+                    <td>Alta</td>
+                    <td>Alta aceptación</td>
+                    <td>Datos relevantes</td>
+                    <td>75%</td>
+                    <td>2024-09-15</td>
+                    <td>
+                      <button class="btn btn-primary btn-sm">Modificar Criterios</button>
+                      <button class="btn btn-secondary btn-sm">Supervisar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script para manejar las pestañas y resaltar la pestaña activa -->
+  <script>
+    document.querySelectorAll('.tab-link').forEach((tabLink) => {
+      tabLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href').substring(1);
+
+        // Ocultar todas las secciones de contenido
+        document.querySelectorAll('.tab-content').forEach((tabContent) => {
+          tabContent.classList.add('hidden');
+        });
+
+        // Mostrar la sección de contenido correspondiente
+        document.getElementById(targetId).classList.remove('hidden');
+
+        // Quitar la clase activa de todas las pestañas
+        document.querySelectorAll('.tab-link').forEach((link) => {
+          link.classList.remove('tab-active', 'border-b-2', 'border-blue-500');
+        });
+
+        // Agregar la clase activa a la pestaña seleccionada
+        event.target.classList.add('tab-active', 'border-b-2', 'border-blue-500');
+      });
+    });
+
+    // Inicializar la primera pestaña como activa
+    document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
+    document.querySelector('.tab-content').classList.remove('hidden');
+  </script>
+
+  <!-- Vendor JS Files -->
+  <script src="/dashboard/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/dashboard/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  
+  <!-- Inicializar DataTable -->
+  <script>
+    // Inicializa la tabla con DataTables
+    let dataTable = new simpleDatatables.DataTable(".datatable", {
+        searchable: true,
+        fixedHeight: true,
+        perPage: 10
+    });
+  </script>
+
+  <script src="/dashboard/NiceAdmin/assets/js/main.js"></script>
+
+</body>
+</html>

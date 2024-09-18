@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <!-- Tailwind CSS Link -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/dashboard/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/dashboard/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+    <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+    <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-gray-200">
+    <nav class="flex py-5 bg-white text-black px-4 items-center relative w-full">
+        <div class="flex items-center w-1/2 px-4">
+            <img src="/img/AgroNexo.png" alt="Logo AgroNexo" class="h-14 w-14 mr-2">
+            <h1 class="text-2xl font-bold text-black">AgroNexo</h1>
+        </div>
+        <ul class="w-1/2 px-4 ml-auto flex justify-end items-center">
+            {{#if user}}
+                <li class="nav-item px-4 flex items-center">
+                    <p class="font-semibold mr-2">{{user.name}}</p>
+                    <span class="text-sm bg-custom-green px-2 py-1 rounded">{{user.role}}</span>
+                </li>
+                <!-- Menú basado en roles -->
+                {{#ifCond user.role '==' 'Analista de Datos'}}
+                    <li class="nav-item px-4 flex items-center">
+                        <a href="/analista-dashboard" class="nav-link flex items-center">
+                            <i class="fas fa-tools mr-2" title="Dashboard de Agricultor"></i> Dashboard Analista de Datos
+                        </a>
+                    </li>
+                {{/ifCond}}
+                {{#ifCond user.role '==' 'Usuarios'}}
+                    <li class="nav-item px-4 flex items-center">
+                        <a href="/user-dashboard" class="nav-link flex items-center">
+                            <i class="fas fa-tools mr-2" title="Dashboard de Usuario"></i> Dashboard Usuario
+                        </a>
+                    </li>
+                {{/ifCond}}
+                {{#ifCond user.role '==' 'Administrador'}}
+                    <li class="nav-item px-4 flex items-center">
+                        <a href="/admin-dashboard" class="nav-link flex items-center">
+                            <i class="fas fa-tools mr-2" title="Admin Panel"></i> Dashboard Administrador
+                        </a>
+                    </li>
+                {{/ifCond}}
+                <!-- Íconos de Font Awesome para perfil y cierre de sesión -->
+                <li class="nav-item px-4 flex items-center">
+                    <a href="/dashboard/functions/edit-profile" class="nav-link flex items-center">
+                        <i class="fas fa-user-edit mr-2" title="Editar Perfil"></i>
+                    </a>
+                </li>
+                <li class="nav-item px-4 flex items-center">
+                    <a href="/logout" class="nav-link flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2" title="Cerrar Sesión"></i>
+                    </a>
+                </li>
+            {{else}}
+                <!-- Si no ha iniciado sesión, muestra las opciones de Inicio, Iniciar Sesión y Registrarse -->
+                <li class="nav-item px-4">
+                    <a href="/index" class="nav-link font-semibold border-2 border-green-500 hover:bg-green-500 hover:text-white py-3 px-4 rounded-md">Inicio</a>
+                </li>
+                <li class="nav-item px-4">
+                    <a href="/login" class="nav-link font-semibold border-2 border-green-500 hover:bg-green-500 hover:text-white py-3 px-4 rounded-md">Iniciar Sesión</a>
+                </li>
+                <li class="nav-item px-4">
+                    <a href="/register" class="nav-link font-semibold border-2 border-green-500 hover:bg-green-500 hover:text-white py-3 px-4 rounded-md">Registrarse</a>
+                </li>
+            {{/if}}
+        </ul>
+    </nav>
+
+    <!-- Contenido de la página -->
+    <div class="w-full mt-0 px-09">
+        {{{body}}}
+    </div>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+          <!-- Columna de Información -->
+          <div class="col-md-4 text-left">
+            <h4 class="widget-title">AgroViabilidad</h4>
+            <address>324 Calle Principal<br>Ciudad, País 12345</address>
+          </div>
+          
+          <!-- Columna de Redes Sociales -->
+          <div class="col-md-4 text-center">
+            <h4 class="widget-title">Síguenos</h4>
+            <div class="social-list">
+                <a href="#"><i class="fa fa-twitter icon-black" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-facebook icon-black" aria-hidden="true"></i></a>                
+            </div>
+          </div>
+          
+          <!-- Columna de Copyright -->
+          <div class="col-md-4 text-right">
+            <p class="copyright clear-float">
+              © AgroViabilidad. Todos los derechos reservados.
+            </p>
+            <div class="credits">
+              Diseñado por <a href="https://www.youtube.com/channel/UCDH0DJaVLkCDtl_YN9hhByw?view_as=subscriberP">AgroNexo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- / Footer -->
+  
+</body>
+</html>
