@@ -1,144 +1,269 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard del Usuario</title>
-  <!-- Tailwind CSS Link -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/dashboard/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
   <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
-  <!-- Fontawesome Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
   <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
   <style>
     .tab-bar {
-     background:rgb(189, 189, 189);
-     border-radius: 4px;
-     padding: 0.5rem 0;
-   }
+      background: rgb(189, 189, 189);
+      border-radius: 4px;
+      padding: 0.5rem 0;
+    }
 
-   .tab-link {
-     position: relative;
-     display: inline-block;
-     padding: 0.5rem 1rem;
-     font-weight: 600;
-     color: #000000;
-     text-decoration: none;
-     transition: color 0.3s ease, border 0.3s ease;
-     border-radius: 4px;
-   }
-   
-   .tab-link::before {
-     content: '';
-     position: absolute;
-     left: 0;
-     bottom: 0;
-     width: 100%;
-     height: 4px;
-     background: linear-gradient(90deg, red, purple, blue);
-     opacity: 0;
-     transition: opacity 0.3s ease;
-   }
+    .tab-link {
+      position: relative;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      color: #000000;
+      text-decoration: none;
+      transition: color 0.3s ease, border 0.3s ease;
+      border-radius: 4px;
+    }
 
-   .tab-link:hover::before,
-   .tab-link.tab-active::before {
-     opacity: 1;
-   }
+    .tab-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, red, purple, blue);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-   .tab-active {
-     color: #3b82f6; /* Color del texto de la pestaña activa */
-   }
- </style>
+    .tab-link:hover::before,
+    .tab-link.tab-active::before {
+      opacity: 1;
+    }
+
+    .tab-active {
+      color: #3b82f6;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    /* Estilos para la tabla */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6; /* Bordes para las filas */
+    }
+
+    .table th {
+      background-color: #f8f9fa; /* Color de fondo para el encabezado */
+      font-weight: bold;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f1f1f1; /* Color al pasar el ratón sobre las filas */
+    }
+  </style>
 </head>
 <body class="bg-gray-100">
 
-  <!-- Menú de navegación en forma de pestañas -->
   <div class="container mx-auto mt-10">
     <div class="bg-white rounded-lg shadow">
-      <!-- Barra de pestañas -->
       <div class="border-b border-gray-200">
         <ul class="flex">
           <li class="mr-1">
-            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#perfil">Perfil</a>
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#gestionIdeas">Gestión de Ideas</a>
           </li>
           <li class="mr-1">
-            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#historial">Historial de Actividades</a>
-          </li>
-          <li class="mr-1">
-            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#soporte">Soporte y Feedback</a>
-          </li>
-          <li class="mr-1">
-            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#notificaciones">Notificaciones</a>
+            <a class="tab-link bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#evaluacionIdeas">Evaluación de Ideas</a>
           </li>
         </ul>
       </div>
-      
-      <!-- Contenido de las pestañas -->
+
       <div class="p-4">
-        <!-- Pestaña Perfil -->
-        <div id="perfil" class="tab-content">
-          <h2 class="text-xl font-bold text-green-700 mb-4">Perfil</h2>
-          <p>Aquí puedes ver y actualizar tu información de perfil.</p>
-          <br>
-          <button onclick="window.location.href='/dashboard/functions/perfil'" 
-          class="py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-700">
-            Editar Perfil
-          </button>
+        <div id="gestionIdeas" class="tab-content">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Ideas</h2>
+          <p>Administra las ideas de productos agrícolas.</p>
+          <div class="card table-responsive">
+            <div class="card-body">
+              <h5 class="card-title">Lista de Ideas</h5>
+              <table class="table datatable" id="ideasTable">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Alcance</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Evaluación</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                    <th>Conclusiones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
-        <!-- Pestaña Historial de Actividades -->
-        <div id="historial" class="tab-content hidden">
-          <h2 class="text-xl font-bold text-green-700 mb-4">Historial de Actividades</h2>
-          <p>Consulta el historial de tus actividades en la plataforma.</p>
-          <!-- Contenido adicional para historial de actividades -->
-        </div>
-
-        <!-- Pestaña Soporte y Feedback -->
-        <div id="soporte" class="tab-content hidden">
-          <h2 class="text-xl font-bold text-green-700 mb-4">Soporte y Feedback</h2>
-          <p>Obtén asistencia y proporciona feedback para mejorar el sistema.</p>
-          <!-- Contenido adicional para soporte y feedback -->
-        </div>
-
-        <!-- Pestaña Notificaciones -->
-        <div id="notificaciones" class="tab-content hidden">
-          <h2 class="text-xl font-bold text-green-700 mb-4">Notificaciones</h2>
-          <p>Revisa las notificaciones importantes y actualizaciones de la plataforma.</p>
-          <!-- Contenido adicional para notificaciones -->
+        <div id="evaluacionIdeas" class="tab-content hidden">
+          <h2 class="text-xl font-bold text-green-700 mb-4">Evaluación de Ideas</h2>
+          <p>Evalúa y califica las ideas propuestas.</p>
+          <div class="card table-responsive">
+            <div class="card-body">
+              <h5 class="card-title">Evaluaciones de Ideas</h5>
+              <table class="table datatable" id="evaluacionesTable">
+                <thead>
+                  <tr>
+                    <th>Idea ID</th>
+                    <th>Componentes</th>
+                    <th>Etapas</th>
+                    <th>Mercado</th>
+                    <th>Aceptación</th>
+                    <th>Datos</th>
+                    <th>Viabilidad (%)</th>
+                    <th>Creado En</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos serán llenados desde el JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Script para manejar las pestañas y resaltar la pestaña activa -->
   <script>
-  // JavaScript para manejar el cambio de pestañas y resaltar la pestaña activa
-  document.querySelectorAll('.tab-link').forEach((tabLink) => {
-    tabLink.addEventListener('click', (event) => {
-      event.preventDefault();
-      const targetId = event.target.getAttribute('href').substring(1);
+    document.querySelectorAll('.tab-link').forEach((tabLink) => {
+      tabLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href').substring(1);
 
-      // Ocultar todas las secciones de contenido
+        document.querySelectorAll('.tab-content').forEach((tabContent) => {
+          tabContent.classList.add('hidden');
+        });
+
+        document.getElementById(targetId).classList.remove('hidden');
+
+        document.querySelectorAll('.tab-link').forEach((link) => {
+          link.classList.remove('tab-active', 'border-b-2', 'border-blue-500');
+        });
+
+        event.target.classList.add('tab-active', 'border-b-2', 'border-blue-500');
+
+        cargarDatos(targetId);
+      });
+    });
+
+    window.onload = function() {
       document.querySelectorAll('.tab-content').forEach((tabContent) => {
         tabContent.classList.add('hidden');
       });
 
-      // Mostrar la sección de contenido correspondiente
-      document.getElementById(targetId).classList.remove('hidden');
+      document.getElementById('gestionIdeas').classList.remove('hidden');
+      document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
+      
+      cargarDatos('gestionIdeas');
+      cargarDatos('evaluacionIdeas');
+    };
 
-      // Quitar la clase activa de todas las pestañas
-      document.querySelectorAll('.tab-link').forEach((link) => {
-        link.classList.remove('tab-active', 'border-b-2', 'border-blue-500');
-      });
-
-      // Agregar la clase activa a la pestaña seleccionada
-      event.target.classList.add('tab-active', 'border-b-2', 'border-blue-500');
-    });
-  });
-
-  // Código para inicializar la primera pestaña como activa
-  document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
-  document.querySelector('.tab-content').classList.remove('hidden');
+    function formatearFecha(fecha) {
+      const date = new Date(fecha);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    }
   </script>
+
+  <script src="/dashboard/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/dashboard/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+
+  <script>
+    function inicializarDataTable(selector) {
+        if (!document.querySelector(selector).classList.contains('datatable-initialized')) {
+            new simpleDatatables.DataTable(selector, {
+                searchable: true,
+                fixedHeight: true,
+                perPage: 10
+            });
+            document.querySelector(selector).classList.add('datatable-initialized');
+        }
+    }
+
+    async function cargarDatos(tipo) {
+        try {
+            const endpoint = tipo === 'gestionIdeas' ? 'ideas' : 'evaluaciones';
+
+            const response = await fetch(`/api/${endpoint}`);
+            if (!response.ok) {
+                throw new Error(`Error HTTP! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (tipo === 'gestionIdeas') {
+                llenarTablaIdeas(data);
+                inicializarDataTable("#ideasTable");
+            } else if (tipo === 'evaluacionIdeas') {
+                llenarTablaEvaluaciones(data);
+                inicializarDataTable("#evaluacionesTable");
+            }
+        } catch (error) {
+            console.error('Error al obtener datos:', error);
+        }
+    }
+
+    function llenarTablaIdeas(data) {
+        const tableBody = document.querySelector('#ideasTable tbody');
+        tableBody.innerHTML = ''; 
+        data.forEach(idea => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${idea.nombre || 'No definido'}</td>
+                <td>${idea.alcance || 'No definido'}</td>
+                <td>${formatearFecha(idea.fecha_creacion) || 'No definido'}</td>
+                <td>${formatearFecha(idea.fecha_evaluacion) || 'N/A'}</td>
+                <td>${idea.usuario_email || 'No definido'}</td>
+                <td>${idea.estado || 'No definido'}</td>
+                <td>${idea.conclusiones || 'N/A'}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function llenarTablaEvaluaciones(data) {
+        const tableBody = document.querySelector('#evaluacionesTable tbody');
+        tableBody.innerHTML = ''; 
+        data.forEach(evaluacion => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${evaluacion.idea_id || 'No definido'}</td>
+                <td>${evaluacion.componentes || 'No definido'}</td>
+                <td>${evaluacion.etapas || 'No definido'}</td>
+                <td>${evaluacion.mercado || 'No definido'}</td>
+                <td>${evaluacion.aceptacion || 'No definido'}</td>
+                <td>${evaluacion.datos || 'No definido'}</td>
+                <td>${evaluacion.viabilidad_porcentaje || 'No definido'}</td>
+                <td>${formatearFecha(evaluacion.creadoEn) || 'No definido'}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+  </script>
+
+  <script src="/dashboard/NiceAdmin/assets/js/main.js"></script>
 
 </body>
 </html>

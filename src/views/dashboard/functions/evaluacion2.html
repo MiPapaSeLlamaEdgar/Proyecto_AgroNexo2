@@ -64,7 +64,6 @@
                 if (componentResponse.ok && componentResult.response) {
                     displaySection('Componentes', componentResult.response);
                     data.componentResponse = componentResult.response; // Guardar para la siguiente solicitud
-                    data.ideaId = componentResult.ideaId; // Guardar el ID de la idea
                 } else {
                     throw new Error('Error en la respuesta de componentes: ' + (componentResult.error || 'Desconocido'));
                 }
@@ -79,7 +78,7 @@
                 });
                 const stagesResult = await stagesResponse.json();
                 if (stagesResponse.ok && stagesResult.response) {
-                    displaySection('Etapa para desarrollar e implementar', stagesResult.response);
+                    displaySection('Etapas para desarrollar e implementar', stagesResult.response);
                     data.stagesResponse = stagesResult.response; // Guardar para la siguiente solicitud
                 } else {
                     throw new Error('Error en la respuesta de etapas: ' + (stagesResult.error || 'Desconocido'));
@@ -187,6 +186,5 @@
             responseContainer.classList.remove('hidden');
         }
     </script>    
-    
 </body>
 </html>

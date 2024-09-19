@@ -114,7 +114,7 @@
                 </select>
               </div>
             </div>
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Generar Reporte</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg" onclick="generarReporte()">Generar Reporte</button>
           </div>
 
           <!-- Tabla de Reportes -->
@@ -130,17 +130,8 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!-- Los reportes listados aquí deben ser filtrados para que solo aparezcan los que el analista ha generado -->
-                  <tr>
-                    <td>Reporte Análisis de Tomate</td>
-                    <td>2024-09-15</td>
-                    <td>Componentes, Etapas, Mercado</td>
-                    <td>
-                      <button class="btn btn-primary btn-sm">Ver</button>
-                      <button class="btn btn-secondary btn-sm">Descargar</button>
-                    </td>
-                  </tr>
+                <tbody id="tablaReportes">
+                  <!-- Aquí se llenarán los reportes generados por el analista -->
                 </tbody>
               </table>
             </div>
@@ -168,20 +159,8 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaIdeas">
                   <!-- Las ideas listadas aquí deben ser filtradas para que solo aparezcan las que el analista ha creado -->
-                  <tr>
-                    <td>Tomate Orgánico</td>
-                    <td>Alcance de la idea</td>
-                    <td>2024-09-01</td>
-                    <td>2024-09-10</td>
-                    <td>En evaluación</td>
-                    <td>Conclusión de la idea</td>
-                    <td>
-                      <button class="btn btn-primary btn-sm">Editar</button>
-                      <button class="btn btn-danger btn-sm">Eliminar</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -212,22 +191,8 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaEvaluaciones">
                   <!-- Las evaluaciones listadas aquí deben ser filtradas para que solo aparezcan las que el analista ha realizado -->
-                  <tr>
-                    <td>Idea 1</td>
-                    <td>Componente 1, Componente 2</td>
-                    <td>Etapa 1, Etapa 2</td>
-                    <td>Alta</td>
-                    <td>Alta aceptación</td>
-                    <td>Datos relevantes</td>
-                    <td>75%</td>
-                    <td>2024-09-15</td>
-                    <td>
-                      <button class="btn btn-primary btn-sm">Modificar Criterios</button>
-                      <button class="btn btn-secondary btn-sm">Supervisar</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -265,6 +230,53 @@
     // Inicializar la primera pestaña como activa
     document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
     document.querySelector('.tab-content').classList.remove('hidden');
+
+    async function generarReporte() {
+      const fechaInicio = document.getElementById('fecha-inicio').value;
+      const fechaFin = document.getElementById('fecha-fin').value;
+      const criterios = document.getElementById('criterios').value;
+
+      try {
+        const response = await fetch('/api/reportes/generar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ fechaInicio, fechaFin, criterios })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          llenarTablaReportes(data.reportes);
+        } else {
+          console.error(data.message);
+          alert('Error al generar el reporte: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Ocurrió un error al generar el reporte.');
+      }
+    }
+
+    function llenarTablaReportes(reportes) {
+      const tbody = document.getElementById('tablaReportes');
+      tbody.innerHTML = ''; // Limpia la tabla
+
+      reportes.forEach(reporte => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${reporte.nombre}</td>
+          <td>${reporte.fechaGeneracion}</td>
+          <td>${reporte.criterios.join(', ')}</td>
+          <td>
+            <button class="btn btn-primary btn-sm">Ver</button>
+            <button class="btn btn-secondary btn-sm">Descargar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
   </script>
 
   <!-- Vendor JS Files -->
@@ -273,11 +285,10 @@
   
   <!-- Inicializar DataTable -->
   <script>
-    // Inicializa la tabla con DataTables
     let dataTable = new simpleDatatables.DataTable(".datatable", {
-        searchable: true,
-        fixedHeight: true,
-        perPage: 10
+      searchable: true,
+      fixedHeight: true,
+      perPage: 10
     });
   </script>
 

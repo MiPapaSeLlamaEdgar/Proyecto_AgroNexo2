@@ -4,7 +4,7 @@ const authorizeRoles = require('../middleware/authMiddleware.js');
 const openaiService = require('../../openaiService');
 
 // Ruta GET para renderizar la página de evaluación simplificada
-router.get('/dashboard/functions/evaluacion2', authorizeRoles(['Analista de Datos']), (req, res) => {
+router.get('/dashboard/functions/evaluacion2', authorizeRoles(['Analista de Datos', 'Administrador']), (req, res) => {
     res.render('dashboard/functions/evaluacion2', {
         layout: 'main',
         user: req.session.user,
@@ -13,11 +13,10 @@ router.get('/dashboard/functions/evaluacion2', authorizeRoles(['Analista de Dato
 });
 
 // Ruta para obtener los componentes
-router.post('/dashboard/functions/evaluacion2/componentes', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/componentes', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription } = req.body;
 
     try {
-        // Genera los componentes
         const componentMessage = `
         Basado en un contexto colombiano y en la siguiente descripción del producto "${productName}":
         
@@ -26,8 +25,6 @@ router.post('/dashboard/functions/evaluacion2/componentes', authorizeRoles(['Ana
         Asumiendo el rol de diseñador de prototipos, ¿podrías generar una lista de los elementos de componentes necesarios que podrían ser hardware, software o elementos de materia prima para la implementación de esta idea en el mercado agrícola?
         `;
         const componentResponse = await openaiService.getChatGPTResponse(componentMessage);
-
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: componentResponse.trim() });
     } catch (error) {
         console.error('Error al procesar los componentes:', error);
@@ -36,7 +33,7 @@ router.post('/dashboard/functions/evaluacion2/componentes', authorizeRoles(['Ana
 });
 
 // Ruta para obtener las etapas
-router.post('/dashboard/functions/evaluacion2/etapas', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/etapas', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse } = req.body;
 
     try {
@@ -49,8 +46,6 @@ router.post('/dashboard/functions/evaluacion2/etapas', authorizeRoles(['Analista
         Como diseñador de prototipos, desglosa las etapas metodológicas necesarias para desarrollar e implementar este prototipo.
         `;
         const stagesResponse = await openaiService.getChatGPTResponse(stagesMessage);
-
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: stagesResponse.trim() });
     } catch (error) {
         console.error('Error al procesar las etapas:', error);
@@ -59,7 +54,7 @@ router.post('/dashboard/functions/evaluacion2/etapas', authorizeRoles(['Analista
 });
 
 // Ruta para obtener la implementación en el mercado
-router.post('/dashboard/functions/evaluacion2/mercado', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/mercado', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse, stagesResponse } = req.body;
 
     try {
@@ -73,8 +68,6 @@ router.post('/dashboard/functions/evaluacion2/mercado', authorizeRoles(['Analist
         Como analista de mercado, detalla las etapas necesarias para implementar esta idea en el mercado agrícola.
         `;
         const marketResponse = await openaiService.getChatGPTResponse(marketMessage);
-        
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: marketResponse.trim() });
     } catch (error) {
         console.error('Error al procesar la implementación en el mercado:', error);
@@ -83,7 +76,7 @@ router.post('/dashboard/functions/evaluacion2/mercado', authorizeRoles(['Analist
 });
 
 // Ruta para evaluar la aceptación del mercado
-router.post('/dashboard/functions/evaluacion2/aceptacion', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/aceptacion', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse, stagesResponse, marketResponse } = req.body;
 
     try {
@@ -98,8 +91,6 @@ router.post('/dashboard/functions/evaluacion2/aceptacion', authorizeRoles(['Anal
         ¿Cuál es la viabilidad general en términos de oferta y demanda en el mercado agrícola?
         `;
         const acceptanceResponse = await openaiService.getChatGPTResponse(acceptanceMessage);
-        
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: acceptanceResponse.trim() });
     } catch (error) {
         console.error('Error al evaluar la aceptación del mercado:', error);
@@ -108,7 +99,7 @@ router.post('/dashboard/functions/evaluacion2/aceptacion', authorizeRoles(['Anal
 });
 
 // Ruta para calcular los costos, tiempo y cantidad de personas
-router.post('/dashboard/functions/evaluacion2/costos', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/costos', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse, stagesResponse, marketResponse, acceptanceResponse } = req.body;
 
     try {
@@ -127,8 +118,6 @@ router.post('/dashboard/functions/evaluacion2/costos', authorizeRoles(['Analista
         - Cantidad de personas necesarias.
         `;
         const datesResponse = await openaiService.getChatGPTResponse(datesMessage);
-        
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: datesResponse.trim() });
     } catch (error) {
         console.error('Error al calcular los costos, tiempo y cantidad de personas:', error);
@@ -137,7 +126,7 @@ router.post('/dashboard/functions/evaluacion2/costos', authorizeRoles(['Analista
 });
 
 // Ruta para calcular la viabilidad en porcentaje
-router.post('/dashboard/functions/evaluacion2/viabilidad', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/viabilidad', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse, stagesResponse, marketResponse, acceptanceResponse, datesResponse } = req.body;
 
     try {
@@ -154,8 +143,6 @@ router.post('/dashboard/functions/evaluacion2/viabilidad', authorizeRoles(['Anal
         Calcula la viabilidad general como un porcentaje.
         `;
         const percentageResponse = await openaiService.getChatGPTResponse(percentageMessage);
-        
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: percentageResponse.trim() });
     } catch (error) {
         console.error('Error al calcular la viabilidad en porcentaje:', error);
@@ -164,7 +151,7 @@ router.post('/dashboard/functions/evaluacion2/viabilidad', authorizeRoles(['Anal
 });
 
 // Ruta para obtener conclusiones
-router.post('/dashboard/functions/evaluacion2/conclusiones', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/conclusiones', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const { productName, productDescription, componentResponse, stagesResponse, marketResponse, acceptanceResponse, datesResponse, percentageResponse } = req.body;
 
     try {
@@ -182,17 +169,15 @@ router.post('/dashboard/functions/evaluacion2/conclusiones', authorizeRoles(['An
         Dame un párrafo corto de conclusiones sobre la idea.
         `;
         const conclusionsResponse = await openaiService.getChatGPTResponse(conclusionsMessage);
-        
-        // Devuelve la respuesta sin insertar en la base de datos todavía
         res.status(200).json({ response: conclusionsResponse.trim() });
     } catch (error) {
-        console.error('Error al formular las conclusiones.', error);
+        console.error('Error al formular las conclusiones:', error);
         res.status(500).json({ error: 'Error al formular las conclusiones.' });
     }
 });
 
 // Nueva ruta para guardar todas las evaluaciones en la base de datos
-router.post('/dashboard/functions/evaluacion2/guardar', authorizeRoles(['Analista de Datos']), async (req, res) => {
+router.post('/dashboard/functions/evaluacion2/guardar', authorizeRoles(['Analista de Datos', 'Administrador']), async (req, res) => {
     const {
         productName,
         productDescription,
@@ -206,42 +191,60 @@ router.post('/dashboard/functions/evaluacion2/guardar', authorizeRoles(['Analist
     } = req.body;
 
     // Verificar que todas las respuestas existen y tienen contenido
-    if (
-        !productName || 
-        !productDescription || 
-        !componentResponse || 
-        !stagesResponse || 
-        !marketResponse || 
-        !acceptanceResponse || 
-        !datesResponse || 
-        !percentageResponse || 
-        !conclusionsResponse
-    ) {
-        return res.status(400).json({ error: 'Faltan datos necesarios para guardar la evaluación' });
+    const requiredFields = {
+        productName, 
+        productDescription, 
+        componentResponse, 
+        stagesResponse, 
+        marketResponse, 
+        acceptanceResponse, 
+        datesResponse, 
+        percentageResponse, 
+        conclusionsResponse
+    };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value || value.trim() === '') {
+            return res.status(400).json({ error: `Falta el campo requerido: ${key}` });
+        }
     }
 
     let connection;
     try {
-        // Inserta una nueva idea con fecha de creación actual y valores predeterminados para las columnas adicionales
         connection = await req.db.getConnection();
+        await connection.beginTransaction(); // Iniciar una transacción para garantizar la consistencia
+        
+        // Actualiza o inserta una nueva idea
         const [result] = await connection.query(
-            'INSERT INTO Ideas (nombre, alcance, usuario_email, estado, conclusiones, fecha_creacion, fecha_evaluacion) VALUES (?, ?, ?, ?, ?, NOW(), NOW())', 
+            'INSERT INTO Ideas (nombre, alcance, usuario_email, estado, conclusiones, fecha_creacion) VALUES (?, ?, ?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE alcance = ?, estado = ?, conclusiones = ?',
             [
-                productName, 
-                productDescription, 
-                req.session.user.email, 
-                'En evaluación', 
-                conclusionsResponse.trim()
+                productName,
+                productDescription,
+                req.session.user.email,
+                'En evaluación',
+                conclusionsResponse.trim(),
+                productDescription, // Para actualizar
+                'En evaluación', // Para actualizar
+                conclusionsResponse.trim() // Para actualizar
             ]
         );
-        const newIdeaId = result.insertId; // Obtiene el ID de la nueva idea
 
-        // Inserta todos los datos en la tabla Evaluaciones
+        // Obtener el ID de la idea insertada o actualizada
+        const newIdeaId = result.insertId || (await connection.query('SELECT id FROM Ideas WHERE nombre = ?', [productName]))[0][0].id; 
+
+        // Inserta o actualiza todos los datos en la tabla Evaluaciones
         await connection.query(
             `INSERT INTO Evaluaciones (idea_id, componentes, etapas, mercado, aceptacion, datos, viabilidad_porcentaje) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+             VALUES (?, ?, ?, ?, ?, ?, ?) 
+             ON DUPLICATE KEY UPDATE componentes = ?, etapas = ?, mercado = ?, aceptacion = ?, datos = ?, viabilidad_porcentaje = ?`,
             [
                 newIdeaId, 
+                componentResponse.trim(), 
+                stagesResponse.trim(), 
+                marketResponse.trim(), 
+                acceptanceResponse.trim(), 
+                datesResponse.trim(), 
+                percentageResponse.trim(),
                 componentResponse.trim(), 
                 stagesResponse.trim(), 
                 marketResponse.trim(), 
@@ -251,8 +254,10 @@ router.post('/dashboard/functions/evaluacion2/guardar', authorizeRoles(['Analist
             ]
         );
 
+        await connection.commit(); // Confirmar transacción
         res.status(200).json({ success: true });
     } catch (dbError) {
+        if (connection) await connection.rollback(); // Revertir transacción en caso de error
         console.error('Error de base de datos:', dbError);
         res.status(500).json({ error: 'Error al guardar la evaluación del producto' });
     } finally {

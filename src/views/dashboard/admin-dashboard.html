@@ -12,7 +12,6 @@
   <link href="/dashboard/NiceAdmin/assets/css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css">
   <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
-  <!-- Updated TinyMCE with API Key -->
   <script src="https://cdn.tiny.cloud/1/b8l3wz4rje7t1jm9cp889gslmupn2qkyccvu3ubu18yjl40l/tinymce/5/tinymce.min.js"></script>
   <style>
     .tab-bar {
@@ -52,14 +51,17 @@
     .tab-active {
       color: #3b82f6;
     }
+
+    .table-responsive {
+      overflow-x: auto;
+      max-height: 500px;
+    }
   </style>
 </head>
 <body class="bg-gray-100">
 
-  <!-- Menú de navegación en forma de pestañas -->
   <div class="container mx-auto mt-10">
     <div class="bg-white rounded-lg shadow">
-      <!-- Barra de pestañas -->
       <div class="border-b border-gray-200">
         <ul class="flex">
           <li class="mr-1">
@@ -80,14 +82,11 @@
         </ul>
       </div>
 
-      <!-- Contenido de las pestañas -->
       <div class="p-4">
         <!-- Pestaña Análisis y Reportes -->
         <div id="analisis" class="tab-content hidden custom-height">
           <h2 class="text-xl font-bold text-green-700 mb-4">Análisis y Reportes</h2>
           <p>Accede a informes y análisis detallados del uso y rendimiento del sistema.</p>
-
-          <!-- Sección de tarjetas con métricas clave -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="bg-white p-4 shadow rounded-lg">
               <h3 class="text-lg font-semibold">Total de accesos</h3>
@@ -103,7 +102,6 @@
             </div>
           </div>
 
-          <!-- Filtros para los reportes -->
           <div class="bg-white p-4 shadow rounded-lg mb-4">
             <h4 class="text-lg font-semibold mb-2">Filtros de Reportes</h4>
             <div class="flex flex-wrap">
@@ -128,8 +126,7 @@
             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Aplicar Filtros</button>
           </div>
 
-          <!-- Tabla de Reportes -->
-          <div class="card mt-3">
+          <div class="card mt-3 table-responsive">
             <div class="card-body">
               <h5 class="card-title">Detalles de uso del sistema</h5>
               <table class="table datatable">
@@ -162,19 +159,18 @@
             </div>
           </div>
 
-          <!-- Botón de descarga de reportes -->
           <div class="mt-4">
             <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
               <i class="fas fa-download"></i> Descargar Informe PDF
             </button>
           </div>
         </div>
-
+        
         <!-- Pestaña Gestión de Usuarios -->
         <div id="gestionUsuarios" class="tab-content">
           <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Usuarios</h2>
           <p>Aquí puedes gestionar los usuarios del sistema, agregar nuevos usuarios, editar detalles o eliminar usuarios existentes.</p>
-          <div class="card mt-3">
+          <div class="card mt-3 table-responsive">
             <div class="card-body">
               <h5 class="card-title">Lista de Usuarios</h5>
               <table class="table datatable" id="usuariosTable">
@@ -197,7 +193,7 @@
         <div id="rolesPermisos" class="tab-content hidden">
           <h2 class="text-xl font-bold text-green-700 mb-4">Roles y Permisos</h2>
           <p>Gestiona los roles y permisos de los usuarios del sistema aquí.</p>
-          <div class="card mt-3">
+          <div class="card mt-3 table-responsive">
             <div class="card-body">
               <h5 class="card-title">Asignar Roles</h5>
               <table class="table datatable" id="rolesTable">
@@ -220,7 +216,7 @@
         <div id="gestionIdeas" class="tab-content hidden">
           <h2 class="text-xl font-bold text-green-700 mb-4">Gestión de Ideas</h2>
           <p>Administra las ideas de productos agrícolas. Realiza operaciones CRUD sobre ellas.</p>
-          <div class="card mt-3">
+          <div class="card mt-3 table-responsive">
             <div class="card-body">
               <h5 class="card-title">Lista de Ideas</h5>
               <table class="table datatable" id="ideasTable">
@@ -242,13 +238,17 @@
               </table>
             </div>
           </div>
+          <!-- Botón para análisis de viabilidad de ideas -->
+          <a href="/dashboard/functions/evaluacion2" class="btn btn-warning mt-3">
+            <i class="fas fa-chart-line"></i> Análisis de Viabilidad
+          </a>
         </div>
 
         <!-- Pestaña Evaluación de Ideas -->
         <div id="evaluacionIdeas" class="tab-content hidden">
           <h2 class="text-xl font-bold text-green-700 mb-4">Evaluación de Ideas</h2>
           <p>Evalúa y califica las ideas propuestas. Modifica los criterios de evaluación y supervisa el proceso de análisis de viabilidad.</p>
-          <div class="card mt-3">
+          <div class="card mt-3 table-responsive">
             <div class="card-body">
               <h5 class="card-title">Evaluaciones de Ideas</h5>
               <table class="table datatable" id="evaluacionesTable">
@@ -276,6 +276,24 @@
     </div>
   </div>
 
+  <!-- Modal para editar -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Editar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editForm">
+            <div id="dynamicFields"></div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Script para manejar las pestañas y resaltar la pestaña activa -->
   <script>
     document.querySelectorAll('.tab-link').forEach((tabLink) => {
@@ -283,39 +301,29 @@
         event.preventDefault();
         const targetId = event.target.getAttribute('href').substring(1);
 
-        // Ocultar todas las secciones de contenido
         document.querySelectorAll('.tab-content').forEach((tabContent) => {
           tabContent.classList.add('hidden');
         });
 
-        // Mostrar la sección de contenido correspondiente
         document.getElementById(targetId).classList.remove('hidden');
 
-        // Quitar la clase activa de todas las pestañas
         document.querySelectorAll('.tab-link').forEach((link) => {
           link.classList.remove('tab-active', 'border-b-2', 'border-blue-500');
         });
 
-        // Agregar la clase activa a la pestaña seleccionada
         event.target.classList.add('tab-active', 'border-b-2', 'border-blue-500');
-
-        // Cargar datos para la pestaña seleccionada
         cargarDatos(targetId);
       });
     });
 
-    // Inicializar la primera pestaña como activa al cargar la página
     window.onload = function() {
-      // Ocultar todas las pestañas
       document.querySelectorAll('.tab-content').forEach((tabContent) => {
         tabContent.classList.add('hidden');
       });
 
-      // Mostrar la primera pestaña (Gestión de Usuarios)
       document.getElementById('gestionUsuarios').classList.remove('hidden');
       document.querySelector('.tab-link').classList.add('tab-active', 'border-b-2', 'border-blue-500');
       
-      // Cargar datos al iniciar
       cargarDatos('gestionUsuarios');
       cargarDatos('gestionIdeas');
       cargarDatos('evaluacionIdeas');
@@ -327,23 +335,20 @@
   <script src="/dashboard/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/dashboard/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
 
-  <!-- Inicializar DataTable -->
   <script>
     function inicializarDataTable(selector) {
-        // Verifica si el DataTable ya está inicializado para evitar errores
-        if (!document.querySelector(selector).classList.contains('datatable-initialized')) {
+        if (!document.querySelector(selector).classList.contains('datatable-inicializada')) {
             new simpleDatatables.DataTable(selector, {
                 searchable: true,
                 fixedHeight: true,
                 perPage: 10
             });
-            document.querySelector(selector).classList.add('datatable-initialized');
+            document.querySelector(selector).classList.add('datatable-inicializada');
         }
     }
 
     async function cargarDatos(tipo) {
         try {
-            // Ajustar el nombre de los endpoints
             const endpoint = tipo === 'gestionUsuarios' ? 'usuarios' :
                              tipo === 'gestionIdeas' ? 'ideas' : 
                              tipo === 'evaluacionIdeas' ? 'evaluaciones' :
@@ -387,17 +392,131 @@
                 <td>${user.name || 'No definido'}</td>
                 <td>${user.email || 'No definido'}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Editar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                    <button class="btn btn-primary btn-sm edit-btn">Editar</button>
+                    <button class="btn btn-danger btn-sm delete-btn">Eliminar</button>
                 </td>
             `;
             tableBody.appendChild(row);
+
+            // Agregar eventos a los botones
+            const editButton = row.querySelector('.edit-btn');
+            const deleteButton = row.querySelector('.delete-btn');
+
+            editButton.addEventListener('click', () => abrirModalEdicion('usuarios', user));
+            deleteButton.addEventListener('click', () => eliminarUsuario(user));
         });
+    }
+
+    function abrirModalEdicion(tipo, data) {
+        const modalLabel = document.getElementById('editModalLabel');
+        const dynamicFields = document.getElementById('dynamicFields');
+        dynamicFields.innerHTML = '';
+
+        if (tipo === 'usuarios') {
+            modalLabel.textContent = 'Editar Usuario';
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="editName" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="editName" value="${data.name}">
+                </div>
+                <div class="mb-3">
+                    <label for="editEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="editEmail" value="${data.email}" disabled>
+                </div>
+            `;
+        } else if (tipo === 'roles') {
+            modalLabel.textContent = 'Editar Rol';
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="editRole" class="form-label">Rol</label>
+                    <select class="form-select" id="editRole">
+                        <option value="Administrador" ${data.name === 'Administrador' ? 'selected' : ''}>Administrador</option>
+                        <option value="Analista de Datos" ${data.name === 'Analista de Datos' ? 'selected' : ''}>Analista de Datos</option>
+                        <option value="Usuarios" ${data.name === 'Usuarios' ? 'selected' : ''}>Usuarios</option>
+                    </select>
+                </div>
+            `;
+        } else if (tipo === 'ideas') {
+            modalLabel.textContent = 'Editar Idea';
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="editNombreIdea" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="editNombreIdea" value="${data.nombre}">
+                </div>
+                <div class="mb-3">
+                    <label for="editAlcanceIdea" class="form-label">Alcance</label>
+                    <input type="text" class="form-control" id="editAlcanceIdea" value="${data.alcance}">
+                </div>
+            `;
+        }
+
+        const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        editModal.show();
+
+        document.getElementById('editForm').onsubmit = function (e) {
+            e.preventDefault();
+            if (tipo === 'usuarios') {
+                const updatedUser = {
+                    name: document.getElementById('editName').value,
+                    email: data.email
+                };
+                actualizarUsuario(updatedUser);
+            } else if (tipo === 'roles') {
+                const updatedRole = {
+                    id: data.role_id,
+                    name: document.getElementById('editRole').value
+                };
+                actualizarRol(updatedRole);
+            } else if (tipo === 'ideas') {
+                const updatedIdea = {
+                    id: data.id,
+                    nombre: document.getElementById('editNombreIdea').value,
+                    alcance: document.getElementById('editAlcanceIdea').value
+                };
+                actualizarIdea(updatedIdea);
+            }
+        };
+    }
+
+    function actualizarUsuario(user) {
+        fetch(`/api/usuarios/${user.email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Usuario actualizado con éxito');
+                cargarDatos('gestionUsuarios');
+            } else {
+                alert('Error al actualizar el usuario');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function eliminarUsuario(user) {
+        if (confirm(`¿Estás seguro de que deseas eliminar al usuario: ${user.name}?`)) {
+            fetch(`/api/usuarios/${user.email}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Usuario eliminado con éxito');
+                    cargarDatos('gestionUsuarios');
+                } else {
+                    alert('Error al eliminar el usuario');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
     }
 
     function llenarTablaIdeas(data) {
         const tableBody = document.querySelector('#ideasTable tbody');
-        tableBody.innerHTML = ''; // Limpiar la tabla
+        tableBody.innerHTML = '';
         data.forEach(idea => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -409,17 +528,59 @@
                 <td>${idea.estado || 'No definido'}</td>
                 <td>${idea.conclusiones || 'N/A'}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Editar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                    <button class="btn btn-primary btn-sm edit-btn">Editar</button>
+                    <button class="btn btn-danger btn-sm delete-btn">Eliminar</button>
                 </td>
             `;
             tableBody.appendChild(row);
+
+            const editButton = row.querySelector('.edit-btn');
+            const deleteButton = row.querySelector('.delete-btn');
+
+            editButton.addEventListener('click', () => abrirModalEdicion('ideas', idea));
+            deleteButton.addEventListener('click', () => eliminarIdea(idea));
         });
+    }
+
+    function actualizarIdea(idea) {
+        fetch(`/api/ideas/${idea.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(idea)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Idea actualizada con éxito');
+                cargarDatos('gestionIdeas');
+            } else {
+                alert('Error al actualizar la idea');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function eliminarIdea(idea) {
+        if (confirm(`¿Estás seguro de que deseas eliminar la idea: ${idea.nombre}?`)) {
+            fetch(`/api/ideas/${idea.id}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Idea eliminada con éxito');
+                    cargarDatos('gestionIdeas');
+                } else {
+                    alert('Error al eliminar la idea');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
     }
 
     function llenarTablaEvaluaciones(data) {
         const tableBody = document.querySelector('#evaluacionesTable tbody');
-        tableBody.innerHTML = ''; // Limpiar la tabla
+        tableBody.innerHTML = '';
         data.forEach(evaluacion => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -432,29 +593,78 @@
                 <td>${evaluacion.viabilidad_porcentaje || 'No definido'}</td>
                 <td>${evaluacion.creadoEn || 'No definido'}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Modificar Criterios</button>
-                    <button class="btn btn-secondary btn-sm">Supervisar</button>
+                    <button class="btn btn-primary btn-sm edit-btn">Editar</button>
+                    <button class="btn btn-danger btn-sm delete-btn">Eliminar</button>
                 </td>
             `;
             tableBody.appendChild(row);
+
+            const editButton = row.querySelector('.edit-btn');
+            const deleteButton = row.querySelector('.delete-btn');
+
+            editButton.addEventListener('click', () => editarEvaluacion(evaluacion));
+            deleteButton.addEventListener('click', () => eliminarEvaluacion(evaluacion));
         });
+    }
+
+    function editarEvaluacion(evaluacion) {
+        alert(`Editar evaluación para la idea ID: ${evaluacion.idea_id}`);
+        // Implementa la lógica de edición
+    }
+
+    function eliminarEvaluacion(evaluacion) {
+        if (confirm(`¿Estás seguro de que deseas eliminar la evaluación para la idea ID: ${evaluacion.idea_id}?`)) {
+            fetch(`/api/evaluaciones/${evaluacion.idea_id}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Evaluación eliminada con éxito');
+                    cargarDatos('evaluacionIdeas');
+                } else {
+                    alert('Error al eliminar la evaluación');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
     }
 
     function llenarTablaRoles(data) {
         const tableBody = document.querySelector('#rolesTable tbody');
-        tableBody.innerHTML = ''; // Limpiar la tabla
+        tableBody.innerHTML = '';
         data.forEach(role => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${role.user_email || 'No definido'}</td>
                 <td>${role.name || 'No definido'}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Editar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                    <button class="btn btn-primary btn-sm edit-btn">Editar</button>
                 </td>
             `;
             tableBody.appendChild(row);
+
+            const editButton = row.querySelector('.edit-btn');
+            editButton.addEventListener('click', () => abrirModalEdicion('roles', role));
         });
+    }
+
+    function actualizarRol(role) {
+        fetch(`/api/roles/${role.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(role)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Rol actualizado con éxito');
+                cargarDatos('rolesPermisos');
+            } else {
+                alert('Error al actualizar el rol');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
   </script>
 

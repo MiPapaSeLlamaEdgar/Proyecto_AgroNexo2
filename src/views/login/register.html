@@ -12,7 +12,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="block mx-auto my-12 p-8 bg-white w-1/3 border border-gray-200 rounded-lg shadow-lg text-gray-800">
         <h1 class="text-3xl font-bold text-center text-green-700">Registrarse</h1>
-        <form action="/storeUser" method="POST" class="mt-4">
+        <form action="/storeUser" method="POST" class="mt-4" onsubmit="return validateForm()">
             <div class="mb-4">
                 <label for="name" class="block text-lg font-medium text-gray-700">Nombre</label>
                 <input type="text" name="name" id="name" placeholder="Nombre"
@@ -33,15 +33,9 @@
                            required>
                     <i class="fas fa-eye absolute right-3 cursor-pointer text-gray-600" onclick="togglePassword('passwordRegister')"></i>
                 </div>
+                <p id="passwordError" class="text-red-600 text-sm hidden">La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un dígito y un carácter especial.</p>
             </div>
-            <div class="mb-4">
-                <label for="role" class="block text-lg font-medium text-gray-700">Rol</label>
-                <select name="role" id="role" class="border border-gray-300 w-full text-lg placeholder-gray-500 p-2 my-2 bg-gray-100 focus:bg-white focus:border-green-500">
-                    <option value="Usuarios">Usuarios (predeterminado)</option>
-                    <option value="Analista de Datos">Analista de Datos</option>
-                    <option value="Administrador">Administrador</option>
-                </select>
-            </div>
+            
             <button type="submit"
                     class="rounded-md bg-green-500 w-full text-lg text-white font-semibold p-2 my-3 hover:bg-green-600 focus:bg-green-700 focus:outline-none">
                 Registrarse
@@ -65,6 +59,26 @@
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
             }
+        }
+
+        function validateForm() {
+            var password = document.getElementById('passwordRegister').value;
+            var passwordError = document.getElementById('passwordError');
+
+            // Password validation pattern
+            var pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+
+            var isValid = true;
+
+            // Validate password strength
+            if (!pattern.test(password)) {
+                passwordError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                passwordError.classList.add('hidden');
+            }
+
+            return isValid;
         }
     </script>
 </body>
